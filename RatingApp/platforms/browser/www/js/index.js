@@ -59,13 +59,17 @@ var config = {
 };
 firebase.initializeApp(config);
 
-//Test firebase database access
+// Test firebase database access
 var database = firebase.database();
 
-database.ref('/tags/').once('value').then(function(snapshot) {
-    imgPath = snapshot.child('american').child('chicksOnTheSquare').val();
+// Results of function call are not actionable unless you call ".then()"
+// This is because these calls return Promises, which can only be acted on
+// Inside of a .then(function(whatever){}); call, as calling return inside
+// this only returns another promise.
+database.ref('/restaurants/').once('value').then(function(snapshot) {
+    imgPath = snapshot.child('chicksOnTheSquare').child('menuURL').val();
 
-    //Test firebase storage access
+    // Test firebase storage access
     var storage = firebase.storage();
     var storageRef = storage.ref(imgPath + 'square-menu-appetizers-2017.jpg');
     storageRef.getDownloadURL().then(function(url) {
