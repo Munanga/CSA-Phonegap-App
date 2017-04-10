@@ -66,25 +66,48 @@ var database = firebase.database();
 // This is because these calls return Promises, which can only be acted on
 // Inside of a .then(function(whatever){}); call, as calling return inside
 // this only returns another promise.
-database.ref('/restaurants/').once('value').then(function(snapshot) {
-    imgPath = snapshot.child('chicksOnTheSquare').child('menuURL').val();
+// database.ref('/restaurants/').once('value').then(function(snapshot) {
+//     imgPath = snapshot.child('chicksOnTheSquare').child('menuURL').val();
 
-    // Test firebase storage access
-    var storage = firebase.storage();
-    var storageRef = storage.ref(imgPath + 'square-menu-appetizers-2017.jpg');
-    storageRef.getDownloadURL().then(function(url) {
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = function(event) {
-            var blob = xhr.response;
-        };
-        xhr.open('GET', url);
-        xhr.send();
+//     // Test firebase storage access
+//     var storage = firebase.storage();
+//     var storageRef = storage.ref(imgPath + 'square-menu-appetizers-2017.jpg');
+//     storageRef.getDownloadURL().then(function(url) {
+//         var xhr = new XMLHttpRequest();
+//         xhr.responseType = 'blob';
+//         xhr.onload = function(event) {
+//             var blob = xhr.response;
+//         };
+//         xhr.open('GET', url);
+//         xhr.send();
 
-        // Or inserted into an <img> element:
-        var img = document.getElementById('myimg');
-        img.src = url;
-    }).catch(function(error) {
-        console.error("Failed to get image");
-    });
+//         // Or inserted into an <img> element:
+//         var img = document.getElementById('myimg');
+//         img.src = url;
+//     }).catch(function(error) {
+//         console.error("Failed to get image");
+//     });
+// });
+
+database.ref('/tags/').once('value').then(function(snapshot) {
+    updateTagList(snapshot.val());
 });
+
+function updateTagList(snapshot) {
+    for (var i in snapshot) {
+        console.log(i);
+        var li = create("<li><button type='button'>" + i + "</button></li>");
+        var ul = document.getElementById('tagList').appendChild(li);
+
+    }
+}
+
+function create(htmlStr) {
+    var frag = document.createDocumentFragment(),
+        temp = document.createElement('div');
+    temp.innerHTML = htmlStr;
+    while (temp.firstChild) {
+        frag.appendChild(temp.firstChild);
+    }
+    return frag;
+}
