@@ -39,20 +39,30 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Hello World</title>
+    <title>WIU Food Ratings</title>
 </head>
 
 <body>
     <div class="app">
-        <h1>PhoneGap</h1>
+        <h1>Food App</h1>
         <div id="deviceready" class="blink">
-            <p class="event listening">Connecting to Device</p>
-            <p class="event received">Device is Ready</p>
-            <p> TEST </p>
+            <p class="event listening">Fetching Food</p>
+            <p class="event received">Food Get!</p>
         </div>
+        <img id="myimg" src="" alt="Image" width=100% height=auto/>
+        <div>
+            <ul id="tagList">
+
+            </ul>
+        </div>
+
     </div>
+    <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase-database.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
+    <!-- This includes Firebase code and sample to illustrate fetching an image-->
     <script type="text/javascript">
         app.initialize();
     </script>
