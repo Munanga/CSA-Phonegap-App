@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+ 
 var app = {
     // Application Constructor
     initialize: function() {
@@ -60,12 +62,13 @@ var config = {
 firebase.initializeApp(config);
 
 // Test firebase database access
-var database = firebase.database();
+//var database = firebase.database();
 
 // Results of function call are not actionable unless you call ".then()"
 // This is because these calls return Promises, which can only be acted on
 // Inside of a .then(function(whatever){}); call, as calling return inside
 // this only returns another promise.
+/*
 database.ref('/restaurants/').once('value').then(function(snapshot) {
     imgPath = snapshot.child('chicksOnTheSquare').child('menuURL').val();
 
@@ -87,19 +90,38 @@ database.ref('/restaurants/').once('value').then(function(snapshot) {
     }).catch(function(error) {
         console.error("Failed to get image");
     });
-});
+});*/
 
-database.ref('/tags/').once('value').then(function(snapshot) {
+firebase.database().ref('/tags/').once('value').then(function(snapshot) {
     updateTagList(snapshot.val());
 });
 
+//Creates tagList 
 function updateTagList(snapshot) {
+	
     for (var i in snapshot) {
         console.log(i);
-        var li = create("<li><button type='button'>" + i + "</button></li>");
-        var ul = document.getElementById('tagList').appendChild(li);
+        var tag = create("<h4>" + i + "</h4>");
+        var tagList = document.getElementById('tagList').appendChild(tag);
+		var div = "<div id='"+ i + "'></div>";
+		document.getElementById('tagList').appendChild(create(div));
+		
+		firebase.database().ref('/tags/' + i).once('value').then(function(snapshot){
+			//Accesses the children of i
+			snapshot.forEach(function(childSnapshot){
+				
+				//Gets access to the restautant info for the current child of i  
+				firebase.database().ref('restaurants/' + childSnapshot.val()).once('value').then(function(restSnapshot){
+					console.log(i);
+					document.getElementById(i).appendChild(create("<a>" + restSnapshot.child("name").val() + "</a>"));
+				});
+			});
+		});
+		
 
     }
+	$('#tagList').accordion({collapsible: true, active: false, heightStyle: "content"});
+	
 }
 
 function create(htmlStr) {
@@ -111,3 +133,10 @@ function create(htmlStr) {
     }
     return frag;
 }
+
+
+
+
+
+
+	
