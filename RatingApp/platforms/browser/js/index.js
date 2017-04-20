@@ -95,13 +95,14 @@ firebase.database().ref('/tags/').once('value').then(function(snapshot) {
 	//Event listener for buttons. still not working
 	var buttons = document.getElementsByClassName('button');
 	for(var i = 0; i < buttons.length; i++){
-		buttons[i].onClick = function(id){
-			var clicked = id;
-			console.log(String(clicked));
-		};
+		buttons[i].onClick = function(){
+			console.log(this.id);
+		}
 	}
 });
 
+
+	
 
 
 
