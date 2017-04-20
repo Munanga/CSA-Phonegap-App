@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+ 
 var app = {
     // Application Constructor
     initialize: function() {
@@ -31,7 +33,7 @@ var app = {
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicity call 'app.receivedEvent(...);'
+    // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
     },
@@ -47,3 +49,80 @@ var app = {
         console.log('Received Event: ' + id);
     }
 };
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyBFx36R9V2DPfeaRtdXhZDI7gUAchSfVcw",
+    authDomain: "macombfoodratings.firebaseapp.com",
+    databaseURL: "https://macombfoodratings.firebaseio.com",
+    projectId: "macombfoodratings",
+    storageBucket: "macombfoodratings.appspot.com",
+    messagingSenderId: "950556034085"
+};
+firebase.initializeApp(config);
+
+
+firebase.database().ref('/tags/').once('value').then(function(snapshot) {
+    updateTagList(snapshot.val());
+});
+
+//Creates tagList 
+function updateTagList(snapshot) {
+	
+    for (var tagName in snapshot) {
+        var tag = create("<h4>" + tagName + "</h4>");
+        var tagList = document.getElementById('tagList').appendChild(tag);
+		var div = "<div id='"+ tagName + "'></div>";
+		var id;
+		document.getElementById('tagList').appendChild(create(div));
+		console.log(tagName);
+		firebase.database().ref('/tags/' + tagName).once('value').then(function(snapshot){
+			console.log(tagName);
+			//Accesses the children of tagName
+			snapshot.forEach(function(childSnapshot){
+				//Gets access to the restautant info for the current child of tagName
+				firebase.database().ref('restaurants/' + childSnapshot.val()).once('value').then(function(restSnapshot){
+					document.getElementById(id).appendChild(create("<button type='button' class='button' id='"+ childSnapshot.val() +"'>" + restSnapshot.child("name").val() + "</button>"));
+				});
+			});
+		});
+		
+		
+		id = tagName;
+    }
+	
+	//Enable accordion
+	$('#tagList').accordion({collapsible: true, active: false, heightStyle: "content"});
+	
+	//Event listener for buttons
+	var buttons = document.getElementsByClassName('button');
+	
+	for(var i = 0; i < buttons.length; i++){
+		buttons[i].addEventListener("click", click(buttons[i].getAttribute('id')), false);
+	}
+	
+	
+}
+
+function click(id){
+	var clicked = id;
+	console.log(clicked);
+}
+
+
+function create(htmlStr) {
+    var frag = document.createDocumentFragment(),
+        temp = document.createElement('div');
+    temp.innerHTML = htmlStr;
+    while (temp.firstChild) {
+        frag.appendChild(temp.firstChild);
+    }
+    return frag;
+}
+
+
+
+
+
+
+	
