@@ -37,7 +37,14 @@
     * Create your own at http://cspisawesome.com
     -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
-
+	<script src="js/jquery-3.2.0.js"></script>
+	<script src="js/jquery-ui.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase-database.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+	
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <title>WIU Food Ratings</title>
 </head>
@@ -50,18 +57,13 @@
             <p class="event received">Food Get!</p>
         </div>
         <img id="myimg" src="" alt="Image" width=100% height=auto/>
-        <div>
-            <ul id="tagList">
-
-            </ul>
+        <div id="tagList">
+            
         </div>
 
     </div>
-    <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase-database.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    
+
     <!-- This includes Firebase code and sample to illustrate fetching an image-->
     <script type="text/javascript">
         app.initialize();
