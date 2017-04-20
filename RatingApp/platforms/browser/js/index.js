@@ -73,28 +73,29 @@ function updateTagList(snapshot) {
         var tag = create("<h4>" + tagName + "</h4>");
         var tagList = document.getElementById('tagList').appendChild(tag);
 		var div = "<div id='"+ tagName + "'></div>";
-		var id;
 		document.getElementById('tagList').appendChild(create(div));
 		console.log(tagName);
+	    	//The first tagName skips over this function and doesn't get processed 
 		firebase.database().ref('/tags/' + tagName).once('value').then(function(snapshot){
 			console.log(tagName);
 			//Accesses the children of tagName
 			snapshot.forEach(function(childSnapshot){
 				//Gets access to the restautant info for the current child of tagName
 				firebase.database().ref('restaurants/' + childSnapshot.val()).once('value').then(function(restSnapshot){
-					document.getElementById(id).appendChild(create("<button type='button' class='button' id='"+ childSnapshot.val() +"'>" + restSnapshot.child("name").val() + "</button>"));
+					document.getElementById(tagName).appendChild(create("<button type='button' class='button' id='"+ childSnapshot.val() +"'>" + restSnapshot.child("name").val() + "</button>"));
 				});
 			});
 		});
 		
 		
-		id = tagName;
+		
     }
 	
 	//Enable accordion
 	$('#tagList').accordion({collapsible: true, active: false, heightStyle: "content"});
 	
 	//Event listener for buttons
+	//Not working for some reason
 	var buttons = document.getElementsByClassName('button');
 	
 	for(var i = 0; i < buttons.length; i++){
