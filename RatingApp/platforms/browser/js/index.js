@@ -92,20 +92,17 @@ firebase.database().ref('/tags/').once('value').then(function(snapshot) {
 	//Enable accordion
 	$('#tagList').accordion({collapsible: true, active: false, heightStyle: "content"});
 	
-	//Event listener for buttons
+	//Event listener for buttons. still not working
 	var buttons = document.getElementsByClassName('button');
-	
 	for(var i = 0; i < buttons.length; i++){
-		buttons[i].addEventListener("click", click(buttons[i].getAttribute('id'), true));
+		buttons[i].onClick = function(id){
+			var clicked = id;
+			console.log(String(clicked));
+		};
 	}
-	
 });
 
 
-function click(id){
-	var clicked = id;
-	console.log(String(clicked));
-}
 
 
 function create(htmlStr) {
