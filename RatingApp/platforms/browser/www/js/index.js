@@ -16,6 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+ 
 var app = {
     // Application Constructor
     initialize: function() {
@@ -48,6 +50,7 @@ var app = {
     }
 };
 
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyBFx36R9V2DPfeaRtdXhZDI7gUAchSfVcw",
@@ -59,48 +62,45 @@ var config = {
 };
 firebase.initializeApp(config);
 
-// Test firebase database access
-var database = firebase.database();
 
-// Results of function call are not actionable unless you call ".then()"
-// This is because these calls return Promises, which can only be acted on
-// Inside of a .then(function(whatever){}); call, as calling return inside
-// this only returns another promise.
-database.ref('/restaurants/').once('value').then(function(snapshot) {
-    imgPath = snapshot.child('chicksOnTheSquare').child('menuURL').val();
-
-    // Test firebase storage access
-    var storage = firebase.storage();
-    var storageRef = storage.ref(imgPath + 'square-menu-appetizers-2017.jpg');
-    storageRef.getDownloadURL().then(function(url) {
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = function(event) {
-            var blob = xhr.response;
-        };
-        xhr.open('GET', url);
-        xhr.send();
-
-        // Or inserted into an <img> element:
-        var img = document.getElementById('myimg');
-        img.src = url;
-    }).catch(function(error) {
-        console.error("Failed to get image");
+firebase.database().ref('/tags/').once('value').then(function(snapshot) {
+    snapshot.forEach(function(tagName){
+		//Creates h4 tag for each tagName
+        document.getElementById('tagList').appendChild(create("<h4>" + tagName.key + "</h4>"));
+		//Creates a div tag with an id equal to the current tagName i.e. American
+		//This is used for holding the restaurants associated with the tag
+		document.getElementById('tagList').appendChild(create("<div id='"+ tagName.key + "'></div>"));
+		
+		firebase.database().ref('tags/' + tagName.key).once('value').then(function(snapshot){
+			//Accesses the children of tagName
+			snapshot.forEach(function(childSnapshot){
+				//Gets access to the restautant info for the current child of tagName
+				firebase.database().ref('restaurants/' + childSnapshot.val()).once('value').then(function(restSnapshot){
+					//creates a button for each tag with an id equal to it's tag name i.e. chicksOnTheSquare.
+					//This id will be used to refference which button was pressed so it's part in the database ('restaurants/buttonId').
+					//From this we will get the data for rendering the specified restaurants page 
+					document.getElementById(tagName.key).appendChild(create("<button type='button' class='button' id = \'"
+					+ childSnapshot.val() +"\'>" + restSnapshot.child("name").val() + "</button>"));
+				});
+			});
+		});
+		
+		
+		
     });
+	
+	
+	//Enable accordion
+	$('#tagList').accordion({collapsible: true, active: false, heightStyle: "content"});
+	$('.button').click(function(){
+		console.log($(this).attr('id'));
+	});
 });
 
-database.ref('/tags/').once('value').then(function(snapshot) {
-    updateTagList(snapshot.val());
-});
+	
+	
 
-function updateTagList(snapshot) {
-    for (var i in snapshot) {
-        console.log(i);
-        var li = create("<li><button type='button'>" + i + "</button></li>");
-        var ul = document.getElementById('tagList').appendChild(li);
 
-    }
-}
 
 function create(htmlStr) {
     var frag = document.createDocumentFragment(),
@@ -111,3 +111,10 @@ function create(htmlStr) {
     }
     return frag;
 }
+
+
+
+
+
+
+	
